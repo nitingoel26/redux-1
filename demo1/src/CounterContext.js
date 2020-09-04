@@ -1,38 +1,34 @@
-import React, { createContext, Component } from "react";
+import React, { createContext, useState } from "react";
 
 export const CounterContext = createContext();
 
-class CounterContextProvider extends Component {
-  state = {
+function CounterContextProvider(props) {
+  let [state, setCounter] = useState({
     counter: 0,
-    incValue: this.incValue.bind(this),
-  };
+  });
 
-  incValue() {
-    this.setState({
-      ...this.state,
-      counter: this.state.counter + 1,
+  function incValue() {
+    setCounter({
+      counter: state.counter + 1,
     });
   }
-  decValue = () => {
-    this.setState({
-      ...this.state,
-      counter: this.state.counter - 1,
+  let decValue = () => {
+    setCounter({
+      counter: state.counter - 1,
     });
   };
-  render() {
-    return (
-      <CounterContext.Provider
-        value={{
-          ...this.state,
 
-          decValue: this.decValue,
-        }}
-      >
-        {this.props.children}
-      </CounterContext.Provider>
-    );
-  }
+  return (
+    <CounterContext.Provider
+      value={{
+        ...state,
+        incValue,
+        decValue,
+      }}
+    >
+      {props.children}
+    </CounterContext.Provider>
+  );
 }
 
 export default CounterContextProvider;
