@@ -1,31 +1,41 @@
-import React, { useContext } from "react";
-import { CounterContext } from "./CounterContext";
-import { incValue, decValue } from "./CounterContext";
-export default function Counter() {
-  const context = useContext(CounterContext);
+import React, { Component } from "react";
 
-  let { counter, dispatch } = context;
-  console.log(context);
-  return (
-    <div>
-      <label>{counter}</label>
-      <br />
-      <button
-        className="increment"
-        onClick={() => {
-          dispatch(incValue());
-        }}
-      >
-        Increment
-      </button>
-      <button
-        className="decrement"
-        onClick={() => {
-          dispatch(decValue());
-        }}
-      >
-        Decrement
-      </button>
-    </div>
-  );
+import { actions, reducer } from "./CounterContext";
+import store from "./store";
+
+export default class Counter extends Component {
+  state = {
+    counter: store.getState().reducer.counter,
+  };
+  componentDidMount() {
+    store.subscribe(() => {
+      this.setState({ counter: store.getState().reducer.counter });
+    });
+  }
+
+  render() {
+    console.log(this.state.counter);
+    return (
+      <div>
+        <label>{this.state.counter}</label>
+        <br />
+        <button
+          className="increment"
+          onClick={() => {
+            return store.dispatch(actions.incValue());
+          }}
+        >
+          Increment
+        </button>
+        <button
+          className="decrement"
+          onClick={() => {
+            return store.dispatch(actions.decValue());
+          }}
+        >
+          Decrement
+        </button>
+      </div>
+    );
+  }
 }
